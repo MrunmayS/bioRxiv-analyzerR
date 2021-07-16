@@ -89,14 +89,4 @@ saveRDS(x, file='list.Rda')
 
 newdata <- readRDS('list.Rda')
 
-function makecloud(x) {
-  wordcloud(x = d$word, 
-            freq = d$freq,
-            min.freq = 1, 
-            max.words = 250,
-            random.order = FALSE,
-            rot.per = 0.35, 
-            colors = brewer.pal(8, "Dark2"))
-}
 
-makecloud(words)

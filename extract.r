@@ -76,7 +76,7 @@ wordcloud(words = d$word,
 barplot(d[1:10, ]$freq, names.arg = d[1:10, ]$word,
         col ="lightgreen", main ="Top 10 most frequent words",
         ylab = "Word frequencies", xlab="Words")
-library('medrxivr')
+  library('medrxivr')
 
 x= mx_api_content(
   from_date = "2020-06-01",
@@ -88,3 +88,15 @@ x= mx_api_content(
 saveRDS(x, file='list.Rda')
 
 newdata <- readRDS('list.Rda')
+
+function makecloud(x) {
+  wordcloud(x = d$word, 
+            freq = d$freq,
+            min.freq = 1, 
+            max.words = 250,
+            random.order = FALSE,
+            rot.per = 0.35, 
+            colors = brewer.pal(8, "Dark2"))
+}
+
+makecloud(words)

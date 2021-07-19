@@ -1,4 +1,4 @@
-df<-  read.delim('cellline2pubtatorcentral.txt', 
+df<-  read.delim('mutation2pubtatorcentral.sample.txt', 
                      header = FALSE, 
                      sep = '\t', 
                      quote = '', 
@@ -7,4 +7,14 @@ df<-  read.delim('cellline2pubtatorcentral.txt',
 
 saveRDS(df, file='cellline2pubtator.Rda')
 
+
 dfnew <- readRDS('cellline2pubtator.Rda')
+
+
+
+library(stringr)
+library(dplyr)
+library(stringi)
+
+
+pattern <- 

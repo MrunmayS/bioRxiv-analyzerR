@@ -6,6 +6,7 @@ library(SnowballC)
 library(wordcloud)
 library(RColorBrewer)
 library(NLP)
+<<<<<<< HEAD
 library(topicmodels)
 library(tidytext)
 library(reshape2)
@@ -15,6 +16,8 @@ library(dplyr)
 library(stringr)
 library(dplyr)
 library(stringi)
+=======
+>>>>>>> parent of 173cce9 (tried making topic models)
 
 extract <- function(filename) {
   dataset = read.delim(filename, 
@@ -64,6 +67,7 @@ extract_title <- function(details_col){
   
 }
 
+<<<<<<< HEAD
 dfn <-extract('list.txt')
 
 load("data_common_words.RData")
@@ -137,3 +141,7 @@ top_terms %>%
   geom_col(show.legend = FALSE) +
   facet_wrap(~ topic, scales = "free") +
   scale_y_reordered()  
+=======
+
+
+>>>>>>> parent of 173cce9 (tried making topic models)

@@ -6,18 +6,11 @@ library(SnowballC)
 library(wordcloud)
 library(RColorBrewer)
 library(NLP)
-<<<<<<< HEAD
 library(topicmodels)
 library(tidytext)
 library(reshape2)
 library(ggplot2)
 library(pals)
-library(dplyr)
-library(stringr)
-library(dplyr)
-library(stringi)
-=======
->>>>>>> parent of 173cce9 (tried making topic models)
 
 extract <- function(filename) {
   dataset = read.delim(filename, 
@@ -60,27 +53,27 @@ extract_author <- function(details_col) {
 }
 
 extract_title <- function(details_col){
-  pattern_title <- "(?<-\")(.*?)(?=\")"
+  pattern_title <- "(?<=\")(.*?)(?=\")"
   title <- str_match(details_col[, 1], pattern_title)
   title <- as.data.frame(title[, 1])
   return(title)
   
 }
 
-<<<<<<< HEAD
-dfn <-extract('list.txt')
+dfn <-extract('citation.txt')
 
 load("data_common_words.RData")
+
  
 calculateDTM <- function(dataframe) {
-  Corpus = VCorpus(VectorSource(dataframe))   
-  
-  toSpace = content_transformer(
+  Corpus <- VCorpus(VectorSource(dataframe))   
+  toSpace <- content_transformer(
     function (x, pattern)
       gsub(pattern, " ", x))
   processedCorpus <- tm_map(Corpus, toSpace, "/")
   processedCorpus <- tm_map(Corpus, toSpace, "@")
   processedCorpus <- tm_map(Corpus, toSpace, "#")
+  
   
   processedCorpus <- tm_map(processedCorpus, content_transformer(tolower))
   processedCorpus <- tm_map(processedCorpus, removeNumbers)
@@ -93,7 +86,7 @@ calculateDTM <- function(dataframe) {
   return(dtm)
 }
 
-dtm <- calculateDTM(df$abstract)
+dtm <- calculateDTM(dfn$Abstract)
 
 VCorpus <- VCorpus(VectorSource(df$Abstract))   
 VCorpus <- Corpus(DataframeSource(df$Abstract))
@@ -102,7 +95,7 @@ processedCorpus <- tm_map(processedCorpus, removeNumbers)
 processedCorpus <- tm_map(processedCorpus, removePunctuation, preserve_intra_word_dashes <- TRUE)
 processedCorpus <- tm_map(processedCorpus, removeWords, stopwords("english"))
 processedCorpus <- tm_map(processedCorpus, removeWords, data_common_words)
-processedCorpus = tm_map(processedCorpus, stripWhitespace)
+processedCorpus <- tm_map(processedCorpus, stripWhitespace)
 minimumFrequency <- 5
 DTM <- DocumentTermMatrix(processedCorpus, control = list(bounds = list(global = c(minimumFrequency, Inf))))
 dim(DTM)
@@ -141,7 +134,4 @@ top_terms %>%
   geom_col(show.legend = FALSE) +
   facet_wrap(~ topic, scales = "free") +
   scale_y_reordered()  
-=======
 
-
->>>>>>> parent of 173cce9 (tried making topic models)

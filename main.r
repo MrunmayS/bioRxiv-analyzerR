@@ -183,7 +183,7 @@ maketopicmodel <- function(x){
   
 }
 
-createtopics <- function(x){
+createtopics <- function(x, K= 10){
   docs <- VCorpus(VectorSource(x))   
   
   # Text transformation
@@ -204,8 +204,7 @@ createtopics <- function(x){
   sel_idx <- slam::row_sums(DTM) > 0
   DTM <- DTM[sel_idx, ]
   
-  K <- 10
-  topicModel <- LDA(DTM, K)
+  topicModel <- LDA(DTM, K, method="Gibbs", control=list(iter = 500, verbose = 25))
   tmResult <- posterior(topicModel)
   attributes(tmResult)
   nTerms(DTM)   
@@ -225,14 +224,11 @@ text_link <- function(topics){
   names(my_adj_list) <- c('from', 'to', 'weight')
   class(my_adj_list)
   dim(my_adj_list)
-  # create igraph S3 object
   net <- graph.data.frame(my_adj_list, directed = FALSE)
-  # store original margins
   orig_mar <- par()$mar
-  # set new margins to limit whitespace in plot
   par(mar=rep(.1, 4))
   
   plot(net, layout = layout_components(net), edge.width = E(net)$weight)
 }
-ttopics <- createtopics(dfn$Abstract)
+ttopics <- createtopics(dfn$Abstract, 20)
 text_link(ttopics)

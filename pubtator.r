@@ -9,7 +9,12 @@ df <- read.delim("mutation2pubtatorcentral.sample.txt",
 saveRDS(df, file = "cellline2pubtator.Rda")
 
 
-dfnew <- readRDS("cellline2pubtator.Rda")
+celline <- readRDS("cellline2pubtator.Rda")
+
+mutation <- as.data.frame(df$V3)
+
+pattern_mutation <- "(([a-z]{2})\\d+)||(([a-z]{1}\\.[^-\\s])(.*?)[\\s])"
+mutation1 <- str_match(mutation[,1], pattern_mutation)
 
 
 

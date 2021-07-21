@@ -230,5 +230,5 @@ text_link <- function(topics){
   
   plot(net, layout = layout_components(net), edge.width = E(net)$weight)
 }
-ttopics <- createtopics(dfn$Abstract, 20)
-text_link(ttopics)
+topics <- createtopics(dfn$Abstract)
+text_link(topics)

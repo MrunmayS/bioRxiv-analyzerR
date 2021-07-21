@@ -63,7 +63,7 @@ extract_title <- function(details_col) {
 
 extract_mutation <- function(abstract) {
   pattern_mutation <- "([a-z]{2})\\d+"
-  mutation <- str_match(mutation[, 1], pattern_mutation)
+  mutation <- str_match(abstract[, 1], pattern_mutation)
   mutation <- as.data.frame(mutation[, 1])
 }
 

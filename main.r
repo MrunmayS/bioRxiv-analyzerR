@@ -123,33 +123,36 @@ makewordcloud <- function(x) {
 
 makewordcloud(freqtable)
 
-makebarplot <- function(x) {
-  barplot(x[1:10, ]$freq,
-    names.arg = x[1:10, ]$word,
-    col = "lightgreen", main = "Top 10 most frequent words",
-    ylab = "Word frequencies", xlab = "Words"
-  )
+makebarplot <- function(df)
+{
+  library(ggplot2)
+  ggplot(data = df[1:10, ], aes(x=df[1:10,]$word, y=df[1:10,]$freq, fill=df[1:10, ]$word))+
+    geom_bar(position ='dodge', stat="identity")+
+    labs(fill="Words")+
+    ggtitle('Top 10 Most frequent words')+
+    xlab('Words')+
+    ylab('Frequency')
 }
 makebarplot(freqtable)
 
 
 maketopicmodel <- function(x){
-  docs <- VCorpus(VectorSource(x))   
+  corpus <- VCorpus(VectorSource(x))   
   
   # Text transformation
   toSpace <- content_transformer(
     function (x, pattern)
       gsub(pattern, " ", x))
-  docs1 <- tm_map(docs, toSpace, "/")
-  docs1 <- tm_map(docs, toSpace, "@")
-  docs1 <- tm_map(docs, toSpace, "#")
-  docs1 <- tm_map(docs1, content_transformer(tolower))
-  docs1 <- tm_map(docs1, removeNumbers)
-  docs1 <- tm_map(docs1, removeWords, stopwords("english"))
-  docs1 <- tm_map(docs1, removeWords, data_common_words)
-  docs1 <- tm_map(docs1, stripWhitespace)
+  processedcorpus <- tm_map(corpus, toSpace, "/")
+  processedcorpus <- tm_map(processedcorpus, toSpace, "@")
+  processedcorpus <- tm_map(processedcorpus, toSpace, "#")
+  processedcorpus <- tm_map(processedcorpus, content_transformer(tolower))
+  processedcorpus <- tm_map(processedcorpus, removeNumbers)
+  processedcorpus <- tm_map(processedcorpus, removeWords, stopwords("english"))
+  processedcorpus <- tm_map(processedcorpus, removeWords, data_common_words)
+  processedcorpus <- tm_map(processedcorpus, stripWhitespace)
   
-  DTM <- DocumentTermMatrix(docs1, control = list(bounds = list(global = c(5, Inf))))
+  DTM <- DocumentTermMatrix(processedcorpus, control = list(bounds = list(global = c(5, Inf))))
   
   sel_idx <- slam::row_sums(DTM) > 0
   DTM <- DTM[sel_idx, ]
@@ -183,28 +186,29 @@ maketopicmodel <- function(x){
   
 }
 
-createtopics <- function(x, K= 10){
-  docs <- VCorpus(VectorSource(x))   
+createtopics <- function(x, K){
+  corpus <- VCorpus(VectorSource(x))   
   
   # Text transformation
   toSpace <- content_transformer(
     function (x, pattern)
       gsub(pattern, " ", x))
-  docs1 <- tm_map(docs, toSpace, "/")
-  docs1 <- tm_map(docs, toSpace, "@")
-  docs1 <- tm_map(docs, toSpace, "#")
-  docs1 <- tm_map(docs1, content_transformer(tolower))
-  docs1 <- tm_map(docs1, removeNumbers)
-  docs1 <- tm_map(docs1, removeWords, stopwords("english"))
-  docs1 <- tm_map(docs1, removeWords, data_common_words)
-  docs1 <- tm_map(docs1, stripWhitespace)
+  processedcorpus <- tm_map(corpus, toSpace, "/")
+  processedcorpus <- tm_map(processedcorpus, toSpace, "@")
+  processedcorpus <- tm_map(processedcorpus, toSpace, "#")
+  processedcorpus <- tm_map(processedcorpus, content_transformer(tolower))
+  processedcorpus <- tm_map(processedcorpus, removeNumbers)
+  processedcorpus <- tm_map(processedcorpus, removeWords, stopwords("english"))
+  processedcorpus <- tm_map(processedcorpus, removeWords, data_common_words)
+  processedcorpus <- tm_map(processedcorpus, stripWhitespace)
   
-  DTM <- DocumentTermMatrix(docs1, control = list(bounds = list(global = c(5, Inf))))
+  DTM <- DocumentTermMatrix(processedcorpus, control = list(bounds = list(global = c(5, Inf))))
   
   sel_idx <- slam::row_sums(DTM) > 0
   DTM <- DTM[sel_idx, ]
   
-  topicModel <- LDA(DTM, K, method="Gibbs", control=list(iter = 500, verbose = 25))
+  topicModel <- LDA(DTM, K, method="VEM" )
+  #topicModel <- LDA(DTM, K)
   tmResult <- posterior(topicModel)
   attributes(tmResult)
   nTerms(DTM)   
@@ -230,5 +234,6 @@ text_link <- function(topics){
   
   plot(net, layout = layout_components(net), edge.width = E(net)$weight)
 }
-topics <- createtopics(dfn$Abstract)
+maketopicmodel(dfn$Abstract)
+topics <- createtopics(dfn$Abstract, 20)
 text_link(topics)

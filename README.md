@@ -1,2 +1,1 @@
-# IGIB
- 
+# bioRxiv-analyzerR

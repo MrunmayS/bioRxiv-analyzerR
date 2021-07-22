@@ -208,7 +208,7 @@ createtopics <- function(x, K){
   DTM <- DTM[sel_idx, ]
   
   topicModel <- LDA(DTM, K, method="VEM" )
-  #topicModel <- LDA(DTM, K)
+  #topicModel <- LDA(DTM, K, method = "Gibbs", control=list(iter = 500, verbose = 25))
   tmResult <- posterior(topicModel)
   attributes(tmResult)
   nTerms(DTM)   
